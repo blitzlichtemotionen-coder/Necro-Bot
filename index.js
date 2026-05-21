@@ -1,16 +1,25 @@
 require('dotenv').config();
 const http = require('http');
-http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('Bot is alive!');
-}).listen(process.env.PORT || 10000);
 const ftp = require('basic-ftp');
 const fs = require('fs');
-const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, AttachmentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const axios = require('axios');
 
-const client = new Client({ 
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] 
+// 1. ZUERST den Discord-Client erstellen, damit er überall im Code bekannt ist
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds, 
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
+
+// 2. DANACH den Dummyserver für Render starten
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is alive!');
+}).listen(process.env.PORT || 10000, '0.0.0.0', () => {
+  console.log('📡 Webserver erfolgreich gestartet auf Port 10000');
 });
 
 // ==================================================
