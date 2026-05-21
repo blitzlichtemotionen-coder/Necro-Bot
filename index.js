@@ -1,4 +1,9 @@
 require('dotenv').config();
+const http = require('http');
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('Bot is alive!');
+}).listen(process.env.PORT || 3000);
 const ftp = require('basic-ftp');
 const fs = require('fs');
 const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, AttachmentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
