@@ -2,24 +2,38 @@ require('dotenv').config();
 const http = require('http');
 const ftp = require('basic-ftp');
 const fs = require('fs');
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { 
+  Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, 
+  ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, 
+  AttachmentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle 
+} = require('discord.js');
 const axios = require('axios');
 
-// 1. ZUERST den Discord-Client erstellen, damit er überall im Code bekannt ist
-const client = new Client({
+// 1. Discord Client erstellen
+const client = new Client({ 
   intents: [
     GatewayIntentBits.Guilds, 
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+    GatewayIntentBits.GuildMessages, 
+    GatewayIntentBits.MessageContent, 
+    GatewayIntentBits.GuildMembers
+  ] 
 });
 
-// 2. DANACH den Dummyserver für Render starten
-http.createServer((req, res) => {
+// 2. Render-Webserver mit intelligentem Port-Ausweich-Schutz
+const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot is alive!');
-}).listen(process.env.PORT || 10000, '0.0.0.0', () => {
-  console.log('📡 Render-Webserver läuft auf Port 10000');
+});
+
+const PORT = process.env.PORT || 10000;
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`📡 Webserver erfolgreich gestartet auf Port ${PORT}`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log('⚠️ Port belegt, weiche auf alternativen Port aus...');
+    server.listen(0, '0.0.0.0'); // Nimmt automatisch den nächsten freien Port
+  }
 });
 
 // ==================================================
