@@ -19,7 +19,7 @@ http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot is alive!');
 }).listen(process.env.PORT || 10000, '0.0.0.0', () => {
-  console.log('📡 Webserver erfolgreich gestartet auf Port 10000');
+  console.log('📡 Render-Webserver läuft auf Port 10000');
 });
 
 // ==================================================
